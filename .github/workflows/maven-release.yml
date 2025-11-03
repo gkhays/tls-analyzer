@@ -41,14 +41,21 @@ jobs:
           TAG="${{ github.event.release.tag_name }}"
           VERSION="${TAG#v}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "nextVersion=${VERSION}-SNAPSHOT" >> $GITHUB_OUTPUT
 
-      - name: Run Maven release
+      - name: Checkout release tag
         run: |
-          mvn -B release:prepare release:perform \
-            -DreleaseVersion=${{ steps.vars.outputs.version }} \
-            -DdevelopmentVersion=${{ steps.vars.outputs.nextVersion }} \
-            -Dtag=${{ github.event.release.tag_name }}
+          git checkout ${{ github.event.release.tag_name }}
+
+      - name: Set version in POM
+        run: |
+          mvn versions:set -DnewVersion=${{ steps.vars.outputs.version }} -DgenerateBackupPoms=false
+
+      - name: Build and deploy
+        run: |
+          mvn -B clean deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
 
       - name: Completion
         run: echo "✅ Maven release completed successfully"
