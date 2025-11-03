@@ -2,26 +2,26 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.tls</groupId>
   <artifactId>tls-analyzer</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <scm>
     <connection>scm:git:https://github.com/gkhays/tls-analyzer.git</connection>
     <developerConnection>scm:git:https://github.com/gkhays/tls-analyzer.git</developerConnection>
     <url>https://github.com/gkhays/tls-analyzer</url>
-    <tag>v0.9.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <junit.version>5.6.0</junit.version>
-    <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
-    <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
-    <checkstyle.version>8.45.1</checkstyle.version>
-    <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+    <junit.version>5.10.2</junit.version>
+    <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
+    <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
+    <checkstyle.version>10.12.7</checkstyle.version>
+    <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
     <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-    <maven-javadoc-plugin.version>3.0.0</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.6.3</maven-javadoc-plugin.version>
     <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
     <!-- JaCoCo thresholds. Increase gradually as you add tests. -->
     <jacoco.unit-tests.limit.instruction-ratio>0%</jacoco.unit-tests.limit.instruction-ratio>
