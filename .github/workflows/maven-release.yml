@@ -1,0 +1,52 @@
+name: Maven Release (via GitHub Release)
+
+on:
+  release:
+    types: [published]  # Triggers when a GitHub Release is published
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write       # Push tags / commits
+      packages: write       # Publish packages if using GitHub Packages
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Required for Maven release tag handling
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          server-id: github               # <id> in settings.xml
+          server-username: GITHUB_ACTOR   # GitHub CI identity
+          server-password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git identity
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      # Derive version from GitHub release tag (e.g. v1.2.3 → 1.2.3)
+      - name: Determine version info
+        id: vars
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "nextVersion=${VERSION}-SNAPSHOT" >> $GITHUB_OUTPUT
+
+      - name: Run Maven release
+        run: |
+          mvn -B release:prepare release:perform \
+            -DreleaseVersion=${{ steps.vars.outputs.version }} \
+            -DdevelopmentVersion=${{ steps.vars.outputs.nextVersion }} \
+            -Dtag=${{ github.event.release.tag_name }}
+
+      - name: Completion
+        run: echo "✅ Maven release completed successfully"
