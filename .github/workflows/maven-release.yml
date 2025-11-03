@@ -65,6 +65,9 @@ jobs:
       - name: Set version in POM
         run: |
           mvn versions:set -DnewVersion=${{ steps.vars.outputs.version }} -DgenerateBackupPoms=false
+          
+          # Update SCM tag to match version
+          sed -i "s|<tag>.*</tag>|<tag>v${{ steps.vars.outputs.version }}</tag>|g" pom.xml
 
       - name: Build and deploy
         run: |
@@ -97,6 +100,9 @@ jobs:
           
           # Update POM with next SNAPSHOT version
           mvn versions:set -DnewVersion=$NEXT_VERSION -DgenerateBackupPoms=false
+          
+          # Update SCM tag to match next version
+          sed -i "s|<tag>.*</tag>|<tag>v${MAJOR}.${MINOR}.${NEXT_PATCH}</tag>|g" pom.xml
 
       - name: Commit and push SNAPSHOT version
         run: |
