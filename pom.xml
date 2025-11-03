@@ -2,13 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.tls</groupId>
   <artifactId>tls-analyzer</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
+  <version>0.9.1-SNAPSHOT</version>
 
   <scm>
     <connection>scm:git:https://github.com/gkhays/tls-analyzer.git</connection>
     <developerConnection>scm:git:https://github.com/gkhays/tls-analyzer.git</developerConnection>
     <url>https://github.com/gkhays/tls-analyzer</url>
-    <tag>HEAD</tag>
+    <tag>v0.9.1</tag>
   </scm>
 
   <properties>
