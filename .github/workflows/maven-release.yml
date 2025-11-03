@@ -72,5 +72,37 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # After successful release, bump version to next SNAPSHOT
+      - name: Checkout main branch
+        run: |
+          git checkout main
+          git pull origin main
+
+      - name: Bump to next SNAPSHOT version
+        id: next_version
+        run: |
+          CURRENT_VERSION="${{ steps.vars.outputs.version }}"
+          
+          # Parse version components (e.g., 0.8.3 → 0.8.4-SNAPSHOT)
+          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+          MAJOR="${VERSION_PARTS[0]}"
+          MINOR="${VERSION_PARTS[1]}"
+          PATCH="${VERSION_PARTS[2]}"
+          
+          # Increment patch version
+          NEXT_PATCH=$((PATCH + 1))
+          NEXT_VERSION="${MAJOR}.${MINOR}.${NEXT_PATCH}-SNAPSHOT"
+          
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+          
+          # Update POM with next SNAPSHOT version
+          mvn versions:set -DnewVersion=$NEXT_VERSION -DgenerateBackupPoms=false
+
+      - name: Commit and push SNAPSHOT version
+        run: |
+          git add pom.xml
+          git commit -m "[maven-release-plugin] prepare for next development iteration"
+          git push origin main
+
       - name: Completion
-        run: echo "✅ Maven release completed successfully"
+        run: echo "✅ Maven release completed and version bumped to ${{ steps.next_version.outputs.next_version }}"
